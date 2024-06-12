@@ -32,8 +32,6 @@ This might be subject to change though!
 
 ```
 .
-├── bin
-│   └── main
 ├── build.sh
 ├── CMakeLists.txt
 ├── lib
