@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stdlib.h>
+
 struct Request {
     uint32_t addr;
     uint32_t data;

@@ -1,0 +1,42 @@
+# Ignore the build directory
+/build/
+
+# Ignore the bin directory
+/bin/
+
+# Ignore all .log files
+*.log
+
+# Ignore all .tmp files
+*.tmp
+
+# Ignore all .o and .a files (object and archive files from the build process)
+*.o
+*.a
+
+# Ignore all .so files (shared object files from the build process)
+*.so
+
+# Ignore all .dSYM directories and files (debug symbols on macOS)
+*.dSYM
+*.dSYM/*
+
+# Ignore all .DS_Store files (macOS directory settings)
+.DS_Store
+
+# Ignore CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake-build-debug/
+CMakeScripts/
+CMakeTmp/
+cmake_install.cmake
+
+# Ignore Visual Studio Code files
+.vscode/
+
+# Ignore JetBrains IDE files
+.idea/
+
+# Ignore Sublime Text project files
+*.sublime-workspace
