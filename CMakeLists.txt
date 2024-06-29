@@ -19,7 +19,9 @@ find_package(SystemCLanguage CONFIG REQUIRED)
 add_executable(main
         src/impl/simulation.h
         src/impl/simulation.cpp
-        src/impl/tracefix.hpp
+        src/impl/ram.cpp
+        src/impl/tlb.cpp
+        src/impl/request_worker.cpp
         src/main.c
         src/help.c
         src/types.h
