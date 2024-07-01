@@ -38,7 +38,7 @@ int run_test() {
     // 1 * 2 = 2
 
     struct Result result = run_simulation(cycles, tlbSize, tlbLatency, blockSize, v2bBlockOffset, memoryLatency,
-                                          numRequests, requests, NULL);
+                                          numRequests, requests, "test");
 
     free(requests);
     return 0;

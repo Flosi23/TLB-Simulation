@@ -57,6 +57,17 @@ public:
         sensitive << this->tlb_addr_out;
     }
 
+    void trace(sc_trace_file *file) {
+        sc_trace(file, this->tlb_addr_in, "tlb_addr_in");
+        sc_trace(file, this->tlb_addr_out, "tlb_addr_out");
+        sc_trace(file, this->tlb_enabled, "tlb_enabled");
+        sc_trace(file, this->ram_addr_in, "ram_addr_in");
+        sc_trace(file, this->ram_data_in, "ram_data_in");
+        sc_trace(file, this->ram_we_in, "ram_we_in");
+        sc_trace(file, this->ram_data_out, "ram_data_out");
+        sc_trace(file, this->ram_enabled, "ram_enabled");
+    }
+
 private:
     void handleRequest() {
         while (true) {

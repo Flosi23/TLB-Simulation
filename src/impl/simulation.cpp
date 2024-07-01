@@ -26,10 +26,14 @@ struct Result run_simulation(
     config.v2bBlockOffset = v2bBlockOffset;
     config.memoryLatency = memoryLatency;
 
-    // TODO: tracefile
     TLB tlb("TLB", config);
     RAM ram("RAM", config.memoryLatency);
     RequestWorker requestWorker("Simulation", requests, numRequests, &tlb, &ram);
+
+    if (tracefile != NULL && strlen(tracefile) > 0) {
+        sc_trace_file *file = sc_create_vcd_trace_file(tracefile);
+        requestWorker.trace(file);
+    }
 
     sc_start(cycles, SC_NS);
 
