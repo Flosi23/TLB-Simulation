@@ -19,6 +19,9 @@ struct Result run_simulation(
     // 1 NS = 1 Cycle
     sc_set_default_time_unit(1, SC_NS);
 
+    // redirect stdout stream to "./debug.log"
+    freopen("debug.log", "w", stdout);
+
     struct SimulationConfig config;
     config.tlbSize = tlbSize;
     config.tlbLatency = tlbLatency;
