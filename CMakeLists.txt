@@ -22,9 +22,13 @@ add_executable(main
         src/impl/ram.cpp
         src/impl/tlb.cpp
         src/impl/request_worker.cpp
-        src/main.c
         src/help.c
         src/types.h
-        src/csv_parser.c)
+        src/csv_parser.c
+        src/csv_parser.h
+        src/arg_parser.c
+        src/arg_parser.h
+        src/main.c
+)
 
 target_link_libraries(main SystemC::systemc)

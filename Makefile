@@ -129,6 +129,30 @@ main/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+src/arg_parser.o: src/arg_parser.c.o
+.PHONY : src/arg_parser.o
+
+# target to build an object file
+src/arg_parser.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/arg_parser.c.o
+.PHONY : src/arg_parser.c.o
+
+src/arg_parser.i: src/arg_parser.c.i
+.PHONY : src/arg_parser.i
+
+# target to preprocess a source file
+src/arg_parser.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/arg_parser.c.i
+.PHONY : src/arg_parser.c.i
+
+src/arg_parser.s: src/arg_parser.c.s
+.PHONY : src/arg_parser.s
+
+# target to generate assembly for a file
+src/arg_parser.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/arg_parser.c.s
+.PHONY : src/arg_parser.c.s
+
 src/csv_parser.o: src/csv_parser.c.o
 .PHONY : src/csv_parser.o
 
@@ -306,6 +330,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... main"
+	@echo "... src/arg_parser.o"
+	@echo "... src/arg_parser.i"
+	@echo "... src/arg_parser.s"
 	@echo "... src/csv_parser.o"
 	@echo "... src/csv_parser.i"
 	@echo "... src/csv_parser.s"
