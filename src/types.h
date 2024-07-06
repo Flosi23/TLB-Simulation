@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#pragma once
+
 struct Request {
     uint32_t addr;
     uint32_t data;
