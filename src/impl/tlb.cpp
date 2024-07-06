@@ -77,7 +77,7 @@ public:
         return this->misses;
     }
 
-    size_t getSizeInBits() {
+    size_t getCacheLineSizeInBits() {
         /*
          * We need `log_2(blockSize) = b` bits to address the byte offset within the block (page).
          *
@@ -102,8 +102,11 @@ public:
          *
          * `cSize = 32 - b - i + 32 - b + 1 = 64 - 2b - i + 1` bits are needed.
         **/
-        size_t cacheLineSize = 64 - 2 * numOffsetBits - numIndexBits + 1;
-        return cacheLineSize * config.tlbSize;
+        return 64 - 2 * numOffsetBits - numIndexBits + 1;
+    }
+
+    size_t getSizeInBits() {
+        return this->getCacheLineSizeInBits() * config.tlbSize;
     }
 
 private:

@@ -29,6 +29,7 @@ enum State {
 };
 
 struct SimulationConfig {
+    int cycles;
     unsigned tlbSize;
     unsigned tlbLatency;
     unsigned blockSize;
