@@ -1,19 +1,20 @@
-### Was ist das Ziel? 
+### Was ist das Ziel?
 
 - Von der Relevanz des Themas überzeugen
 - Korrektheit der Implementierung untermauern
 
-
 ### Was muss recherchiert werden
 
 1. Heute Standards für TLBs
-   1. übliche Größe
-   2. übliche Architekturen
+    1. übliche Größe
+    2. übliche Architekturen
+    3. TLB-Latenz
+    4. Hauptspeicherzugrifflatenz
 
 ### Was muss untersucht werden
 
-2. Speicherzugriffverhalten einer Summe über eine verkettete Liste untersuchen, 
-   dabei sollen `csv` Dateien erstellt werden die Beispielhaft das Speicherzugriffs verhalten einer Summe beschreiben
+2. Speicherzugriffverhalten einer Summe über eine verkettete Liste untersuchen,
+   dabei sollen `csv` Dateien erstellt werden die beispielhaft, dass Speicherzugriffs verhalten einer Summe beschreiben
 
 ### Interesting links
 
