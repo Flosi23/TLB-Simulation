@@ -11,26 +11,43 @@
 // Function prototypes
 void printHelp();
 
+static int debug_flag = 0;
+
 struct Args parseArgs(int argc, char *argv[]) {
+
     // Create a struct with all the options that the user could possibly pass
     static struct option long_options[] = {
-            {"cycles",           required_argument, 0, 'c'},
-            {"blocksize",        required_argument, 0, 'b'}, // Blocksize
-            {"v2b-block-offset", required_argument, 0, 'v'}, // V2B Block Offset
-            {"tlb-size",         required_argument, 0, 't'}, // TLB Size
-            {"tlb-latency",      required_argument, 0, 'l'}, // TLB Latency
-            {"memory-latency",   required_argument, 0, 'm'}, // Memory Latency
-            {"tf",               required_argument, 0, 'f'}, // Trace File
-            {"lf",               required_argument, 0, 'o'}, // Log file (this argument is not required by the task)
-            {"help",             no_argument,       0, 'h'}, // Help
-            {0,                  0,                 0, 0} // Terminator
+            {"cycles",           required_argument, 0,           'c'},
+            {"blocksize",        required_argument, 0,           'b'}, // Blocksize
+            {"v2b-block-offset", required_argument, 0,           'v'}, // V2B Block Offset
+            {"tlb-size",         required_argument, 0,           't'}, // TLB Size
+            {"tlb-latency",      required_argument, 0,           'l'}, // TLB Latency
+            {"memory-latency",   required_argument, 0,           'm'}, // Memory Latency
+            {"tf",               required_argument, 0,           'f'}, // Trace File
+            {"lf",               required_argument, 0,           'o'}, // Log file (this argument is not required by the task)
+            {"help",             no_argument,       0,           'h'}, // Help
+            {"debug",            no_argument,       &debug_flag, 1},
+            {0,                  0,                 0,           0} // Terminator
     };
 
     int option_index = 0;
     int c;
 
+    // All numbers are signed here to detect if the user enters a negative number (prevent implicit cast to unsigned)
+    struct UncheckedArgs {
+        int cycles;
+        int blocksize;
+        int v2b_block_offset;
+        int tlb_size;
+        int tlb_latency;
+        int memory_latency;
+        const char *trace_file; // File name
+        const char *log_file; // File name
+        const char *filename; // File name
+    };
+
     // Initialize the struct with default values
-    struct Args args = {
+    struct UncheckedArgs args = {
             .cycles = INT_MAX,
             .blocksize = 512, // 512 Byte is the smallest found value in RISC_V systems
             .v2b_block_offset = 8, // 8 is simply a power of 2 which is a common value
@@ -81,9 +98,12 @@ struct Args parseArgs(int argc, char *argv[]) {
                 // Log File
                 args.log_file = optarg;
                 break;
-            default:
+            case '?':
                 // Print help reference
                 printf("Refer to --help for further information and usage examples.\n");
+                exit(1);
+                break;
+            default:
                 break;
         }
     }
@@ -107,7 +127,7 @@ struct Args parseArgs(int argc, char *argv[]) {
     }
 
     if (args.blocksize <= 0) {
-        fprintf(stderr, "Error: Block size must be greater than 0\n");
+        fprintf(stderr, "Error: Blocksize must be greater than 0\n");
         printHelp();
         exit(1);
     }
@@ -130,7 +150,26 @@ struct Args parseArgs(int argc, char *argv[]) {
         exit(1);
     }
 
-    return args;
+    if (args.v2b_block_offset <= 0) {
+        fprintf(stderr, "Error: V2B Block Offset must be greater than 0\n");
+        printHelp();
+        exit(1);
+    }
+
+    // after all checks (e.g. if the user entered a negative number) we can cast the values to unsigned
+    struct Args checkedArgs;
+    checkedArgs.cycles = args.cycles;
+    checkedArgs.blocksize = args.blocksize;
+    checkedArgs.v2b_block_offset = args.v2b_block_offset;
+    checkedArgs.tlb_size = args.tlb_size;
+    checkedArgs.tlb_latency = args.tlb_latency;
+    checkedArgs.memory_latency = args.memory_latency;
+    checkedArgs.trace_file = args.trace_file;
+    checkedArgs.log_file = args.log_file;
+    checkedArgs.filename = args.filename;
+    checkedArgs.debug = debug_flag;
+
+    return checkedArgs;
 }
 
 

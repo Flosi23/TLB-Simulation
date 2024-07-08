@@ -1,15 +1,17 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #pragma once
 
 struct Args {
-    uint32_t cycles;
-    uint32_t blocksize;
-    int32_t v2b_block_offset;
-    uint32_t tlb_size;
-    uint32_t tlb_latency;
-    uint32_t memory_latency;
+    unsigned int cycles;
+    unsigned int blocksize;
+    unsigned int v2b_block_offset;
+    unsigned int tlb_size;
+    unsigned int tlb_latency;
+    unsigned int memory_latency;
+    bool debug;
     const char *trace_file; // File name
     const char *log_file; // File name
     const char *filename; // File name

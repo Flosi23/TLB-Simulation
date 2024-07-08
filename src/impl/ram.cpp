@@ -1,11 +1,14 @@
 #include <systemc>
 #include "../types.h"
+#include "log.hpp"
 
 using namespace sc_core;
 
 struct RAM : public sc_module {
 
 private:
+    Logger log;
+
     unsigned memoryLatency;
 
 public:
@@ -20,7 +23,7 @@ public:
 
     SC_HAS_PROCESS(RAM);
 
-    RAM(sc_module_name name, unsigned memoryLatency) : sc_module(name) {
+    RAM(sc_module_name name, Logger log, unsigned memoryLatency) : sc_module(name), log(log) {
         this->memoryLatency = memoryLatency;
         SC_THREAD(handleRequest);
         sensitive << enabled;
@@ -38,10 +41,10 @@ public:
             uint32_t data = data_in.read();
             int we = we_in.read();
 
-            std::cout << "Memory Access on: addr: " << addr << ", data: " << data << ", we: " << we << std::endl;
+            log.DEBUG("Memory Access on: addr: %zu, data: %zu, we: %d", addr, data, we);
             // simulate memory Latency if > 0
             if (this->memoryLatency > 0) {
-                std::cout << "Memory Latency: " << this->memoryLatency << " cycles" << std::endl;
+                log.DEBUG("Memory Latency: %zu cycles", this->memoryLatency);
                 wait(this->memoryLatency, SC_NS);
             }
             // send the data back to the CPU

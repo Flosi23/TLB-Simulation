@@ -20,13 +20,23 @@ struct Result run_simulation(
         const char *tracefile
 );
 
+struct Result run_simulation_extended(
+        int cycles,
+        unsigned tlbSize,
+        unsigned tlbLatency,
+        unsigned blockSize,
+        unsigned v2bBlockOffset,
+        unsigned memoryLatency,
+        size_t numRequests,
+        struct Request requests[numRequests],
+        const char *tracefile,
+        const char *logfile,
+        bool debug
+);
+
 #ifdef __cplusplus
 }
 #endif
-
-enum State {
-    REQ_FETCH, TLB_FETCH, RAM_FETCH
-};
 
 struct SimulationConfig {
     int cycles;

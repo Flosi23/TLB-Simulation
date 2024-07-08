@@ -1,6 +1,7 @@
 #include <systemc>
 #include <systemc.h>
 #include "simulation.h"
+#include "log.hpp"
 
 using namespace sc_core;
 
@@ -22,6 +23,7 @@ struct VirtualAddress {
 struct TLB : public sc_module {
 
 private:
+    Logger log;
     SimulationConfig config;
 
     uint8_t numOffsetBits;
@@ -41,7 +43,7 @@ public:
 
     SC_HAS_PROCESS(TLB);
 
-    TLB(sc_module_name name, SimulationConfig config) : sc_module(name) {
+    TLB(sc_module_name name, Logger log, SimulationConfig config) : sc_module(name), log(log) {
         this->config = config;
 
         this->numOffsetBits = std::ceil(std::log2(this->config.blockSize));
@@ -119,33 +121,32 @@ private:
             }
 
             uint32_t addr = addr_in.read();
-            std::cout << "TLB access on addr: " << addr << std::endl;
+            log.DEBUG("TLB access on addr: %zu", addr);
 
             VirtualAddress va = translate(addr);
-            std::cout << "Virtual Address: tag: " << va.tag << " index: " << va.index << " offset: " << va.offset
-                      << std::endl;
+            log.DEBUG("Virtual Address: tag: %zu index: %zu offset: %zu", va.tag, va.index, va.offset);
 
             TLBEntry entry = this->entries[va.index];
 
 
             // simulate tlb latency
             if (this->config.tlbLatency > 0) {
-                std::cout << "TLB latency: " << this->config.tlbLatency << " cycles" << std::endl;
+                log.DEBUG("TLB latency: %zu cycles", this->config.tlbLatency);
                 wait(this->config.tlbLatency, SC_NS);
             }
 
             if (entry.valid && entry.tag == va.tag) {
-                std::cout << "TLB hit: entryTag: " << entry.tag << " == vaTag: " << va.tag << std::endl;
+                log.DEBUG("TLB hit: entryTag: %zu == vaTag: %zu", entry.tag, va.tag);
                 this->hits++;
 
-                std::cout << "TLB pfa: " << entry.pfa << std::endl;
+                log.DEBUG("TLB pfa: %zu", entry.pfa);
                 addr_out.write(entry.pfa + va.offset);
             } else {
-                std::cout << "TLB miss" << std::endl;
+                log.DEBUG("TLB miss");
                 this->misses++;
                 // simulate page table lookup
                 if (this->config.memoryLatency > 0) {
-                    std::cout << "Memory latency: " << this->config.memoryLatency << " cycles" << std::endl;
+                    log.DEBUG("Memory latency: %zu cycles", this->config.memoryLatency);
                     wait(this->config.memoryLatency, SC_NS);
                 }
                 // calculate the physical frame number
@@ -155,7 +156,7 @@ private:
                 // (LRU policy but because only one entry per index it's effectively just replacing whatever is there)
                 this->entries[va.index] = {va.tag, pfa, 1};
 
-                std::cout << "TLB pfa: " << pfa << std::endl;
+                log.DEBUG("TLB pfa: %zu", pfa);
                 addr_out.write(pfa + va.offset);
             }
 

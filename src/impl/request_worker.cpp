@@ -2,6 +2,7 @@
 #include "tlb.cpp"
 #include "ram.cpp"
 #include <systemc>
+#include "log.hpp"
 
 using namespace sc_core;
 
@@ -11,6 +12,8 @@ using namespace sc_core;
 class RequestWorker : public sc_module {
 
 private:
+    Logger log;
+
     Request *requests;
     unsigned numRequests;
 
@@ -33,7 +36,9 @@ private:
 public:
     SC_HAS_PROCESS(RequestWorker);
 
-    RequestWorker(sc_module_name name, Request *requests, size_t numRequests, TLB *tlb, RAM *ram) : sc_module(name) {
+    RequestWorker(sc_module_name name, Logger log, Request *requests, size_t numRequests, TLB *tlb, RAM *ram)
+            : sc_module(name),
+              log(log) {
         this->requests = requests;
         this->numRequests = numRequests;
         this->tlb = tlb;
@@ -77,9 +82,7 @@ private:
             }
 
             Request request = requests[reqIndex];
-            std::cout << std::endl;
-            std::cout << "-------- Handle request " << reqIndex << " --------"
-                      << std::endl;
+            log.DEBUG("-------- Handle request %zu --------", reqIndex);
 
             this->tlb_addr_in.write(request.addr);
 

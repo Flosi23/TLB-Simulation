@@ -1,5 +1,6 @@
 #include "request_worker.cpp"
 #include <systemc>
+#include "log.hpp"
 
 SimulationConfig
 createConfig(int cycles, unsigned tlbSize, unsigned tlbLatency, unsigned blockSize, unsigned v2bBlockOffset,
@@ -14,29 +15,29 @@ createConfig(int cycles, unsigned tlbSize, unsigned tlbLatency, unsigned blockSi
     return config;
 }
 
-void logSimulationStart(SimulationConfig config, size_t numRequests) {
-    std::cout << "-------------- Simulation started ----------------" << std::endl;
-    std::cout << "Cycles: " << config.cycles << std::endl;
-    std::cout << "TLB Size (entries): " << config.tlbSize << std::endl;
-    std::cout << "TLB Latency (cycles): " << config.tlbLatency << std::endl;
-    std::cout << "Memory Latency (cycles): " << config.memoryLatency << std::endl;
-    std::cout << "Block Size (byte): " << config.blockSize << std::endl;
-    std::cout << "V2B Block Offset: " << config.v2bBlockOffset << std::endl;
-    std::cout << "Number of Requests: " << numRequests << std::endl;
+void logSimulationStart(Logger log, SimulationConfig config, size_t numRequests) {
+    log.INFO("-------------- Simulation started ----------------");
+    log.INFO("Cycles: %zd", config.cycles);
+    log.INFO("TLB Size (entries): %zu", config.tlbSize);
+    log.INFO("TLB Latency (cycles): %zu", config.tlbLatency);
+    log.INFO("Memory Latency (cycles): %zu", config.memoryLatency);
+    log.INFO("Block Size (byte): %zu", config.blockSize);
+    log.INFO("V2B Block Offset: %zu", config.v2bBlockOffset);
+    log.INFO("Number of Requests: %zu", numRequests);
 }
 
-void logSimulationEnd(Result res, size_t tlbSizeInBits, size_t tlbCacheLineSizeInBits) {
-    std::cout << "-------------- Simulation finished ----------------" << std::endl;
-    std::cout << "Time (Cycles): " << res.cycles << std::endl;
-    std::cout << "TLB Size: " << tlbSizeInBits << " bits, " << tlbSizeInBits / 8 << " byte" << std::endl;
-    std::cout << "TLB Cache Line Size: " << tlbCacheLineSizeInBits << "bits, " << tlbCacheLineSizeInBits / 8 << " byte"
-              << std::endl;
-    std::cout << "TLB Hits: " << res.hits << std::endl;
-    std::cout << "TLB Misses: " << res.misses << std::endl;
+void logSimulationEnd(Logger log, Result res, size_t tlbSizeInBits, size_t tlbCacheLineSizeInBits) {
+    log.INFO("-------------- Simulation finished ----------------");
+    log.INFO("Time (Cycles): %zu", res.cycles);
+    log.INFO("TLB Size: %zu bits, %zu byte", tlbSizeInBits, tlbSizeInBits / 8);
+    log.INFO("TLB Cache Line Size: %zu bits, %zu byte", tlbCacheLineSizeInBits, tlbCacheLineSizeInBits / 8);
+    log.INFO("TLB Hits: %zu", res.hits);
+    log.INFO("TLB Misses: %zu", res.misses);
 }
 
 
 extern "C" {
+
 struct Result run_simulation(
         int cycles,
         unsigned tlbSize,
@@ -48,16 +49,41 @@ struct Result run_simulation(
         struct Request requests[],
         const char *tracefile
 ) {
+    return run_simulation_extended(cycles, tlbSize, tlbLatency, blockSize, v2bBlockOffset, memoryLatency, numRequests,
+                                   requests, tracefile, NULL, LogLevel::INFO);
+}
+
+
+struct Result run_simulation_extended(
+        int cycles,
+        unsigned tlbSize,
+        unsigned tlbLatency,
+        unsigned blockSize,
+        unsigned v2bBlockOffset,
+        unsigned memoryLatency,
+        size_t numRequests,
+        struct Request requests[],
+        const char *tracefile,
+        const char *logfile,
+        bool debug
+) {
     sc_core::sc_report_handler::set_actions("/IEEE_Std_1666/deprecated",
                                             sc_core::SC_DO_NOTHING);
+
+    LogLevel logLevel = LogLevel::INFO;
+    if (debug) {
+        logLevel = LogLevel::DEBUG;
+    }
+    Logger log(logLevel, logfile);
+
     // 1 NS = 1 Cycle
     sc_set_default_time_unit(1, SC_NS);
     struct SimulationConfig config = createConfig(cycles, tlbSize, tlbLatency, blockSize, v2bBlockOffset,
                                                   memoryLatency);
     // init all systemc modules
-    TLB tlb("TLB", config);
-    RAM ram("RAM", config.memoryLatency);
-    RequestWorker requestWorker("Simulation", requests, numRequests, &tlb, &ram);
+    TLB tlb("TLB", log, config);
+    RAM ram("RAM", log, config.memoryLatency);
+    RequestWorker requestWorker("Simulation", log, requests, numRequests, &tlb, &ram);
 
     if (tracefile != NULL && strlen(tracefile) > 0) {
         sc_trace_file *file = sc_create_vcd_trace_file(tracefile);
@@ -65,7 +91,7 @@ struct Result run_simulation(
     }
 
     // start the simulation
-    logSimulationStart(config, numRequests);
+    logSimulationStart(log, config, numRequests);
     sc_start(cycles, SC_NS);
 
     // handle simulation end
@@ -74,10 +100,11 @@ struct Result run_simulation(
     res.cycles = cyclesElapsed;
     res.misses = tlb.getMisses();
     res.hits = tlb.getHits();
-    logSimulationEnd(res, tlb.getSizeInBits(), tlb.getCacheLineSizeInBits());
+    logSimulationEnd(log, res, tlb.getSizeInBits(), tlb.getCacheLineSizeInBits());
 
     // free up any memory allocated for the TLB
     tlb.cleanup();
     return res;
 }
+
 }

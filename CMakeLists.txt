@@ -29,6 +29,7 @@ add_executable(main
         src/arg_parser.c
         src/arg_parser.h
         src/main.c
+        src/impl/log.hpp
 )
 
 target_link_libraries(main SystemC::systemc)
