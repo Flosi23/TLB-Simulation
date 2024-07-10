@@ -33,6 +33,7 @@ void logSimulationEnd(Logger log, Result res, size_t tlbSizeInBits, size_t tlbCa
     log.INFO("TLB Cache Line Size: %zu bits, %zu byte", tlbCacheLineSizeInBits, tlbCacheLineSizeInBits / 8);
     log.INFO("TLB Hits: %zu", res.hits);
     log.INFO("TLB Misses: %zu", res.misses);
+    log.INFO("Primitive Gate Count: %zu", res.primitiveGateCount);
 }
 
 
@@ -100,6 +101,7 @@ struct Result run_simulation_extended(
     res.cycles = cyclesElapsed;
     res.misses = tlb.getMisses();
     res.hits = tlb.getHits();
+    res.primitiveGateCount = tlb.getPrimitiveGateCount();
     logSimulationEnd(log, res, tlb.getSizeInBits(), tlb.getCacheLineSizeInBits());
 
     // free up any memory allocated for the TLB

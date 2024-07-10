@@ -111,7 +111,16 @@ public:
         return this->getCacheLineSizeInBits() * config.tlbSize;
     }
 
+    size_t getPrimitiveGateCount() {
+        return this->getPrimitiveGatesForStorage();
+    }
+
 private:
+
+    size_t getPrimitiveGatesForStorage() {
+        return this->getSizeInBits() * 4;
+    }
+
 
     void handleVirtualAddress() {
         while (true) {
@@ -152,8 +161,7 @@ private:
                 // calculate the physical frame number
                 uint32_t pfa = getPhysicalFrameAddress(va);
 
-                // override any existing entry int the TLB
-                // (LRU policy but because only one entry per index it's effectively just replacing whatever is there)
+                // we use a direct-mapped cache -> override any existing entry int the TLB
                 this->entries[va.index] = {va.tag, pfa, 1};
 
                 log.DEBUG("TLB pfa: %zu", pfa);
