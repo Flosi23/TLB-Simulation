@@ -41,5 +41,4 @@ cmake_install.cmake
 # Ignore Sublime Text project files
 *.sublime-workspace
 *.vcd
-*.log
 venv/
