@@ -177,14 +177,17 @@ void printHelp() {
     // TODO: Print all options of the program and example usage
     printf("Usage: tlb-sim [OPTIONS] Input_File [filename...]\n");
     printf("Options:\n");
-    printf("  -h, --help                Print this help message\n");
-    printf("  -c, --cycles              Number of cycles to simulate\n");
-    printf("  -b, --blocksize           Block size in bytes\n");
-    printf("  -v, --v2b-block-offset    Number of blocks to offset the virtual address\n");
-    printf("  -t, --tlb-size            Number of entries in the TLB\n");
-    printf("  -l, --tlb-latency         Latency of the TLB in cycles\n");
-    printf("  -m, --memory-latency      Latency of the RAM\n");
-    printf("  -f, --tf                  Path to trace file\n");
+    printf("  -h,  --help                Print this help message\n");
+    printf("  -c,  --cycles              Number of cycles to simulate\n");
+    printf("       --blocksize           Block size in bytes\n");
+    printf("       --v2b-block-offset    Number of blocks to offset the virtual address\n");
+    printf("       --tlb-size            Number of entries in the TLB\n");
+    printf("       --tlb-latency         Latency of the TLB in cycles\n");
+    printf("       --memory-latency      Latency of the RAM\n");
+    printf("       --tf                  Path to trace file\n");
+    printf("       --debug               Prints debug information\n");
+    printf("       --lf                  Path to log file\n");
+
     printf("  filename                  Path to the input file\n"); // TODO: Change if necessary
 
 
