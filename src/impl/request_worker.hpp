@@ -1,6 +1,6 @@
 #include <iostream>
-#include "tlb.cpp"
-#include "ram.cpp"
+#include "tlb.hpp"
+#include "ram.hpp"
 #include <systemc>
 #include "log.hpp"
 
@@ -17,18 +17,18 @@ private:
     Request *requests;
     unsigned numRequests;
 
-    SimulationConfig config;
+    SimulationConfig config{};
     TLB *tlb;
     RAM *ram;
 
-    sc_buffer <uint32_t> tlb_addr_in;
-    sc_buffer <uint32_t> tlb_addr_out;
+    sc_buffer<uint32_t> tlb_addr_in;
+    sc_buffer<uint32_t> tlb_addr_out;
     sc_signal<bool> tlb_enabled;
 
-    sc_buffer <uint32_t> ram_addr_in;
-    sc_buffer <uint32_t> ram_data_in;
+    sc_buffer<uint32_t> ram_addr_in;
+    sc_buffer<uint32_t> ram_data_in;
     sc_buffer<int> ram_we_in;
-    sc_buffer <uint32_t> ram_data_out;
+    sc_buffer<uint32_t> ram_data_out;
     sc_signal<bool> ram_enabled;
 
     uint32_t reqIndex;
@@ -36,7 +36,7 @@ private:
 public:
     SC_HAS_PROCESS(RequestWorker);
 
-    RequestWorker(sc_module_name name, Logger log, Request *requests, size_t numRequests, TLB *tlb, RAM *ram)
+    RequestWorker(const sc_module_name &name, Logger log, Request *requests, size_t numRequests, TLB *tlb, RAM *ram)
             : sc_module(name),
               log(log) {
         this->requests = requests;

@@ -24,7 +24,7 @@ struct TLB : public sc_module {
 
 private:
     Logger log;
-    SimulationConfig config;
+    SimulationConfig config{};
 
     uint8_t numOffsetBits;
     uint8_t numIndexBits;
@@ -36,14 +36,14 @@ private:
     TLBEntry *entries;
 
 public:
-    sc_in <uint32_t> addr_in;
-    sc_out <uint32_t> addr_out;
+    sc_in<uint32_t> addr_in;
+    sc_out<uint32_t> addr_out;
 
     sc_in<bool> enabled;
 
     SC_HAS_PROCESS(TLB);
 
-    TLB(sc_module_name name, Logger log, SimulationConfig config) : sc_module(name), log(log) {
+    TLB(const sc_module_name &name, Logger log, SimulationConfig config) : sc_module(name), log(log) {
         this->config = config;
 
         this->numOffsetBits = std::ceil(std::log2(this->config.blockSize));
@@ -54,7 +54,7 @@ public:
         this->misses = 0;
 
         this->entries = (TLBEntry *) calloc(this->config.tlbSize, sizeof(TLBEntry));
-        if (this->entries == NULL) {
+        if (this->entries == nullptr) {
             std::cerr << "Failed to allocate memory for TLB entries" << std::endl;
             exit(1);
         }
@@ -71,15 +71,15 @@ public:
         free(this->entries);
     }
 
-    size_t getHits() {
+    size_t getHits() const {
         return this->hits;
     }
 
-    size_t getMisses() {
+    size_t getMisses() const {
         return this->misses;
     }
 
-    size_t getCacheLineSizeInBits() {
+    size_t getCacheLineSizeInBits() const {
         /*
          * We need `log_2(blockSize) = b` bits to address the byte offset within the block (page).
          *
@@ -107,7 +107,7 @@ public:
         return 64 - 2 * numOffsetBits - numIndexBits + 1;
     }
 
-    size_t getSizeInBits() {
+    size_t getSizeInBits() const {
         return this->getCacheLineSizeInBits() * config.tlbSize;
     }
 
@@ -117,7 +117,7 @@ public:
 
 private:
 
-    size_t getPrimitiveGatesForStorage() {
+    size_t getPrimitiveGatesForStorage() const {
         return this->getSizeInBits() * 4;
     }
 
@@ -175,8 +175,8 @@ private:
     /**
      * Splits the address into tag, index and offset
      */
-    VirtualAddress translate(uint32_t addr) {
-        VirtualAddress va;
+    VirtualAddress translate(uint32_t addr) const {
+        VirtualAddress va{};
         va.tag = addr >> (numOffsetBits + numIndexBits);
         va.offset = addr & ((1 << numOffsetBits) - 1);
         va.index = (addr >> numOffsetBits) & ((1 << numIndexBits) - 1);
@@ -186,7 +186,7 @@ private:
     /**
      * Calculates the physical frame address (the first byte in the frame) for the given virtual address
      */
-    uint32_t getPhysicalFrameAddress(VirtualAddress va) {
+    uint32_t getPhysicalFrameAddress(VirtualAddress va) const {
         // The Virtual page address points to the first byte in the virtual page.
         // This means it consists of all bits except the offset (since the offset points to the byte within the page)
         uint32_t virtualPageAddress = (va.tag << numIndexBits) | va.index;

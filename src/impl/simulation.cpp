@@ -1,11 +1,11 @@
-#include "request_worker.cpp"
+#include "request_worker.hpp"
 #include <systemc>
 #include "log.hpp"
 
 SimulationConfig
 createConfig(int cycles, unsigned tlbSize, unsigned tlbLatency, unsigned blockSize, unsigned v2bBlockOffset,
              unsigned memoryLatency) {
-    SimulationConfig config;
+    SimulationConfig config{};
     config.cycles = cycles;
     config.tlbSize = tlbSize;
     config.tlbLatency = tlbLatency;
@@ -51,7 +51,7 @@ struct Result run_simulation(
         const char *tracefile
 ) {
     return run_simulation_extended(cycles, tlbSize, tlbLatency, blockSize, v2bBlockOffset, memoryLatency, numRequests,
-                                   requests, tracefile, NULL, LogLevel::INFO);
+                                   requests, tracefile, nullptr, LogLevel::INFO);
 }
 
 
@@ -86,7 +86,7 @@ struct Result run_simulation_extended(
     RAM ram("RAM", log, config.memoryLatency);
     RequestWorker requestWorker("Simulation", log, requests, numRequests, &tlb, &ram);
 
-    if (tracefile != NULL && strlen(tracefile) > 0) {
+    if (tracefile != nullptr && strlen(tracefile) > 0) {
         sc_trace_file *file = sc_create_vcd_trace_file(tracefile);
         requestWorker.trace(file);
     }
@@ -97,7 +97,7 @@ struct Result run_simulation_extended(
 
     // handle simulation end
     double cyclesElapsed = sc_time_stamp().to_default_time_units();
-    struct Result res;
+    struct Result res{};
     res.cycles = cyclesElapsed;
     res.misses = tlb.getMisses();
     res.hits = tlb.getHits();

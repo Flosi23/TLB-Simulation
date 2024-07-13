@@ -19,10 +19,9 @@ find_package(SystemCLanguage CONFIG REQUIRED)
 add_executable(main
         src/impl/simulation.h
         src/impl/simulation.cpp
-        src/impl/ram.cpp
-        src/impl/tlb.cpp
-        src/impl/request_worker.cpp
-        src/help.c
+        src/impl/ram.hpp
+        src/impl/tlb.hpp
+        src/impl/request_worker.hpp
         src/types.h
         src/csv_parser.c
         src/csv_parser.h

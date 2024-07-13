@@ -12,18 +12,18 @@ private:
     unsigned memoryLatency;
 
 public:
-    sc_in <uint32_t> data_in;
+    sc_in<uint32_t> data_in;
     sc_in<int> we_in;
-    sc_in <uint32_t> addr_in;
+    sc_in<uint32_t> addr_in;
 
     sc_in<bool> enabled;
 
-    sc_out <uint32_t> data_out;
+    sc_out<uint32_t> data_out;
 
 
     SC_HAS_PROCESS(RAM);
 
-    RAM(sc_module_name name, Logger log, unsigned memoryLatency) : sc_module(name), log(log) {
+    RAM(const sc_module_name &name, Logger log, unsigned memoryLatency) : sc_module(name), log(log) {
         this->memoryLatency = memoryLatency;
         SC_THREAD(handleRequest);
         sensitive << enabled;

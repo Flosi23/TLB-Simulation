@@ -27,7 +27,7 @@ struct Args parseArgs(int argc, char *argv[]) {
             {"lf",               required_argument, 0,           'o'}, // Log file (this argument is not required by the task)
             {"help",             no_argument,       0,           'h'}, // Help
             {"debug",            no_argument,       &debug_flag, 1},
-            {0,                  0,                 0,           0} // Terminator
+            {0, 0,                                  0,           0} // Terminator
     };
 
     int option_index = 0;
@@ -49,14 +49,14 @@ struct Args parseArgs(int argc, char *argv[]) {
     // Initialize the struct with default values
     struct UncheckedArgs args = {
             .cycles = INT_MAX,
-            .blocksize = 512, // 512 Byte is the smallest found value in RISC_V systems
-            .v2b_block_offset = 8, // 8 is simply a power of 2 which is a common value
-            .tlb_size = 512, // This is the number of entries in the TLB
+            .blocksize = 4096, // 4KiB is the default page size used by some operating systems (e.g. linux x84_64), but it differs (e.g. 16KiB on M1 ARM macOS)
+            .v2b_block_offset = 8,
+            .tlb_size = 256,
             .tlb_latency = 1, // TODO: NOT FINAL
             .memory_latency = 100, // TODO: NOT FINAL
             .trace_file = NULL, // No tracefile
             .log_file = NULL, // No log file
-            .filename = NULL // No default because of required arg
+            .filename = NULL // No default -> required arg
     };
 
     // Parse the arguments
