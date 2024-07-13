@@ -16,8 +16,8 @@ private:
 
     LogLevel level = LogLevel::DEBUG;
 
-    void LOG(LogLevel level, const char *fmt, va_list args) {
-        if (level < this->level) {
+    void LOG(LogLevel logLevel, const char *fmt, va_list args) {
+        if (logLevel < this->level) {
             return;
         }
 
@@ -28,10 +28,8 @@ private:
     }
 
 public:
-    Logger(LogLevel level) : level(level) {}
-
     Logger(LogLevel level, const char *logfile) : level(level) {
-        if (logfile != NULL) {
+        if (logfile != nullptr) {
             // redirect stdout stream to logfile
             freopen(logfile, "w", stdout);
         }

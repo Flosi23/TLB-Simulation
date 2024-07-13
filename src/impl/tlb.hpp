@@ -28,7 +28,6 @@ private:
 
     uint8_t numOffsetBits;
     uint8_t numIndexBits;
-    uint8_t numTagBits;
 
     size_t hits;
     size_t misses;
@@ -48,7 +47,6 @@ public:
 
         this->numOffsetBits = std::ceil(std::log2(this->config.blockSize));
         this->numIndexBits = std::ceil(std::log2(this->config.tlbSize));
-        this->numTagBits = 32 - numOffsetBits - numIndexBits;
 
         this->hits = 0;
         this->misses = 0;
