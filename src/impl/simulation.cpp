@@ -98,7 +98,8 @@ struct Result run_simulation_extended(
     // handle simulation end
     double cyclesElapsed = sc_time_stamp().to_default_time_units();
     struct Result res{};
-    res.cycles = cyclesElapsed;
+    // return SIZE_MAX if the simulation did not finished within the given cycles
+    res.cycles = requestWorker.getIsFinished() ? (size_t) cyclesElapsed : SIZE_MAX;
     res.misses = tlb.getMisses();
     res.hits = tlb.getHits();
     res.primitiveGateCount = tlb.getPrimitiveGateCount();

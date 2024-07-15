@@ -109,8 +109,7 @@ def main():
     parser = argparse.ArgumentParser(description="Simulate memory accesses in a linked list.")
     parser.add_argument("--list-size", type=int, default=1000, help="The size of the linked list to simulate.")
     parser.add_argument("--sp-base", type=lambda x: int(x, 0), default=0x0, help="Base address of the stack pointer.")
-    # Default heap base is default sp_base + 32 bytes = 0x20
-    parser.add_argument("--heap-base", type=lambda x: int(x, 0), default=0x20, help="Base address of the heap.")
+    parser.add_argument("--heap-base", type=lambda x: int(x, 0), default=0x1000, help="Base address of the heap.")
     # Default heap size is 256 MiB
     parser.add_argument("--heap-size", type=lambda x: int(x, 0), default=0x10000000, help="Size of the heap in bytes.")
     parser.add_argument("--filename", type=str, default='linked_list',

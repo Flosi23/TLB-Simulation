@@ -27,6 +27,7 @@ struct Args parseArgs(int argc, char *argv[]) {
             {"lf",               required_argument, 0,           'o'}, // Log file (this argument is not required by the task)
             {"help",             no_argument,       0,           'h'}, // Help
             {"debug",            no_argument,       &debug_flag, 1},
+            {"rf",               required_argument, 0,           'r'}, // Will write the result (or all if multiple simulations are run) in a csv file
             {0, 0,                                  0,           0} // Terminator
     };
 
@@ -41,6 +42,7 @@ struct Args parseArgs(int argc, char *argv[]) {
         int tlb_size;
         int tlb_latency;
         int memory_latency;
+        const char *result_file; // File name
         const char *trace_file; // File name
         const char *log_file; // File name
         const char *filename; // File name
@@ -52,8 +54,9 @@ struct Args parseArgs(int argc, char *argv[]) {
             .blocksize = 4096, // 4KiB is the default page size used by some operating systems (e.g. linux x84_64), but it differs (e.g. 16KiB on M1 ARM macOS)
             .v2b_block_offset = 8,
             .tlb_size = 256,
-            .tlb_latency = 1, // TODO: NOT FINAL
-            .memory_latency = 100, // TODO: NOT FINAL
+            .tlb_latency = 10, // TODO: NOT FINAL
+            .memory_latency = 60, // TODO: NOT FINAL
+            .result_file = NULL, // No result file
             .trace_file = NULL, // No tracefile
             .log_file = NULL, // No log file
             .filename = NULL // No default -> required arg
@@ -97,6 +100,10 @@ struct Args parseArgs(int argc, char *argv[]) {
             case 'o':
                 // Log File
                 args.log_file = optarg;
+                break;
+            case 'r':
+                // Result File
+                args.result_file = optarg;
                 break;
             case '?':
                 // Print help reference
@@ -168,6 +175,7 @@ struct Args parseArgs(int argc, char *argv[]) {
     checkedArgs.log_file = args.log_file;
     checkedArgs.filename = args.filename;
     checkedArgs.debug = debug_flag;
+    checkedArgs.result_file = args.result_file;
 
     return checkedArgs;
 }
@@ -187,6 +195,7 @@ void printHelp() {
     printf("       --tf                  Path to trace file\n");
     printf("       --debug               Prints debug information\n");
     printf("       --lf                  Path to log file\n");
+    printf("       --rf                  Path to result file\n");
 
     printf("  filename                  Path to the input file\n"); // TODO: Change if necessary
 

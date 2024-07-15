@@ -1,4 +1,6 @@
-## Summe über eine verkettete Liste
+# Summe über eine verkettete Liste
+
+## Speicherzugriffe
 
 Um herauszufinden, wie sich die Speicherzugriffe auf bei einer Summe über eine verkettete Liste verhalten, werden wir
 folgendes C Programm betrachten:
@@ -118,3 +120,122 @@ die Anzahl der Speicherzugriffe zu reduzieren und zu vereinfachen.
 
 3. Schleifenende
     1. `sum` wird von `[sp, #12]` in Register `w0` geladen
+
+## Simulation
+
+Für die Simulation besonders relevant ist die Verteilung der `Knoten` der verketten Liste im Speicher. Diese ist dabei
+nicht deterministisch, da die Knoten auf dem Heap
+gespeichert werden und die Speicheradressen somit von Betriebssystem, Allokationsstrategie und Zustand des Speichers zum
+Zeitpunkt der Ausführung abhängen.
+Aus diesem Grund wurden zwei verschiedene Dateien erstellt, die die Speicherzugriffe bei der Summierung über eine
+verkettete Liste mit 1000 Knoten beschreiben. Dabei enthält jede Datei genau 6006 Speicherzugriffe.
+
+- [linked_list_large_heap.csv](../examples/linked_list_large_heap.csv): Die Knoten der Liste sind auf einem Heap der
+  Größe
+  256 MiB gleichmäßig verteilt.
+- [linked_list_small_heap.csv](../examples/linked_list_small_heap.csv): Die Knoten der Liste sind auf einem Heap der
+  Größe
+  64 KiB gleichmäßig verteilt.
+
+Die Dateien wurden mithilfe des Python Scripts `linked_list.py` erstellt, welches die Speicherzugriffe des Programms
+simuliert und dabei folgende Parameter berücksichtigt:
+
+- `--heap-size`: Die Größe des Heaps in Bytes → Die Knoten werden gleichmäßig auf dem Heap verteilt
+- `--heap-base`: Die Basisadresse des Heaps
+- `--stack-base`: Die Basisadresse des Stacks
+- `--list-size`: Die Anzahl der Knoten in der Liste
+- `--filename`: Der Name der Ausgabedatei
+
+Die Simulation wurde mit folgenden Parametern durchgeführt:
+
+- `TLB Latency`: 10 Cycles
+- `Memory Latency`: 60 Cycles
+- `Block Size`: 4096 Bytes
+- `V2B Block Offset`: 8
+
+Wir treffen außerdem die Annahme (in den Simulationsdateien auch garantiert) dass der Stack und Heap keine
+Speicherblöcke teilen. Der Stack beginnt in den Beispielen immer bei Adresse `0x0` und geht bis `0xfff`, der Heap
+beginnt bei Adresse `0x1000` und
+geht bis `0x1000 + heap_size`.
+
+### Simulationsergebnisse
+
+Die Simulation wird jeweils mit einer TLB Größe von 1 bis 32 Einträgen durchgeführt.
+
+#### Großer Heap
+
+Die detaillierten Ergebnisse auf denen die folgenden Grafiken basieren sind in der
+Datei [result_linked_list_large_heap_32.csv](./results/result_linked_list_large_heap_32.csv) zu finden.
+
+![Cycles](./assets/linked_list_large_heap_cycles.png)
+![HitMiss](./assets/linked_list_large_heap_hit_miss.png)
+
+Wie man erkennen kann stagnieren sowohl die Anzahl der Zyklen als auch die Anzahl der TLB Hits / Misses mit zunehmender
+Größe des Translation Lookaside Buffers bei etwa 500.000 Zyklen und ca. 1100 TLB Misses. Das lässt sich dadurch
+erklären, dass die
+Knoten gleichmäßig auf einem Heap der Größe 256 MiB verteilt sind, also auf `256 MiB / 4096 B = 65536` physische Blöcke.
+Die Wahrscheinlichkeit, dass also eine Node Adresse bereits im TLB ist, ist also sehr gering. Jeder neue Zugriff
+auf `ptr->data` in der Schleife führt also zu einem TLB Miss und erst bei `ptr->next` greift
+wieder der TLB Cache (wenn `ptr->next` im selben
+Block liegt). Aus diesem Grund ist die Anzahl der TLB Misses auch sehr nah an der Anzahl der Knoten in der
+Liste.
+
+Außerdem bemerkenswert ist die extrem schnelle Reduktion von TLB Misses bei zunehmender Größe, welche damit
+zusammenhängt, dass der
+Stackpointer (welcher für > 2/3 aller Speicherzugriffe benötigt wird) nicht mehr durch nachfolgende Zugriffe aus dem TLB
+verdrängt wird, da die Wahrscheinlichkeit, dass eine Adresse auf dem Heap denselben Index im TLB hat immer geringer
+wird.
+
+#### Kleiner Heap
+
+Die detaillierten Ergebnisse auf denen die folgenden Grafiken basieren sind in der
+Datei [result_linked_list_small_heap_32.csv](./results/result_linked_list_small_heap_32.csv) zu finden.
+
+![Cycles](./assets/linked_list_small_heap_cycles.png)
+![HitMiss](./assets/linked_list_small_heap_hit_miss.png)
+
+Auch hier stagnieren die Zyklen und die Anzahl der TLB Hits / Misses bei zunehmender Größe. Bemerkenswert ist jedoch,
+dass
+sich die Kurve ab einer Größe von 17 Einträgen überhaupt nicht mehr verändert und konstant bei 17 Misses / ca. 420.000
+Zyklen bleibt. Das ist dadurch zu erklären, dass die Knoten bei einem Heap der Größe `64 KiB` bei gleichmäßiger
+Verteilung, welche hier
+gegeben ist auf `64 KiB / 4096 B = 16` Blöcke verteilt sind. Dazu kommt noch einen Block für den Stack. Es braucht also
+nur 17
+Misses bis alle verwendeten Blöcke im TLB sind, nicht verdrängt werden können und keine weiteren Misses mehr auftreten.
+
+Das spiegelt sich auch in der Anzahl der Zyklen wider, welche bei einer TLB Größe von 17 Einträgen mit 420.000 16 %
+Prozent geringer
+ist als bei dem vorherigen Beispiel.
+
+## Fazit
+
+Die Miss Rate des TLBs und damit auch die Anzahl der benötigten Zyklen bei
+einer
+Summe über eine verkettete List extrem von der räumlichen Lokalität der Speicherzugriffe abhängig. Liegen alle Adressen
+nah beieinander oder in einer geringen Anzahl von Blöcken, so kann die Anzahl der Misses auf ein Minimum reduziert
+werden  
+(siehe [kleiner Heap Beispiel](#kleiner-heap)). Liegen die Adressen jedoch alle in verschiedenen Speicherblöcken, tritt
+bei jedem neuen
+Knoten
+ein neuer Conflict Miss auf.
+
+Allerdings ist auch bemerkenswert, dass alleine durch das Cachen des Stackpointers die Anzahl der Misses und der
+benötigten
+Zyklen stark reduziert werden kann und so, selbst wenn die (initialen) Zugriffe auf Knoten immer zu Misses führen, die
+benötigten
+Zyklen um ca. 20 % reduziert werden können, und die Misses um mehr als 50 % (
+siehe [großer Heap Beispiel](#großer-heap)).
+
+### Speedup
+
+Wie schon erwähnt ist der Speedup stark von der räumlichen Lokalität der Speicherzugriffe abhängig. Trotzdem lassen
+sich einige Aussagen treffen. Die Ausführungszeit ohne TLB würde bei `6006 * 2 * 60 = 720720` (jede Requests greift
+einmal für
+den Page Table Lookup und einmal für den eigentlichen Speicherzugriff auf den RAM zu) liegen.
+
+Selbst bei schlechter räumlicher Lokalität (wie im [großen Heap Beispiel](#großer-heap)) kann durch das Cachen des
+Stackpointers
+ein Speedup von ca. `30%` erreicht werden. Bei guter räumlicher Lokalität (wie
+im [kleiner Heap Beispiel](#kleiner-heap))
+ist sogar ein Speedup von ca. `40%` möglich. Es ist also definitiv sinnvoll, einen TLB in Prozessoren zu verwenden.
+

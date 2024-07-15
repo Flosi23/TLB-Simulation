@@ -31,6 +31,8 @@ private:
     sc_buffer<uint32_t> ram_data_out;
     sc_signal<bool> ram_enabled;
 
+    bool isFinished = false;
+
     uint32_t reqIndex;
 
 public:
@@ -73,11 +75,16 @@ public:
         sc_trace(file, this->ram_enabled, "ram_enabled");
     }
 
+    bool getIsFinished() {
+        return this->isFinished;
+    }
+
 private:
     void handleRequest() {
         while (true) {
             if (reqIndex >= numRequests) {
                 sc_stop();
+                this->isFinished = true;
                 return;
             }
 

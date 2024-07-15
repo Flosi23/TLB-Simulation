@@ -12,6 +12,7 @@ struct Args {
     unsigned int tlb_latency;
     unsigned int memory_latency;
     bool debug;
+    const char *result_file; // File name
     const char *trace_file; // File name
     const char *log_file; // File name
     const char *filename; // File name
