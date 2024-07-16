@@ -66,7 +66,43 @@ ein Speedup von ca. `30%` erreicht werden. Bei guter räumlicher Lokalität (wie
 im [kleiner Heap Beispiel](#kleiner-heap))
 ist sogar ein Speedup von ca. `40%` möglich. Es ist also definitiv sinnvoll, einen TLB in Prozessoren zu verwenden.
 
+---
+
+# Ergebnisse der Literaturrecherche
+
+## Übliche Größen für TLBs
+Je nach Anwendung kann die Größe eines TLBs variieren. In "Computer Organization and Design" von David Patterson wird von Größen von 32 - 4.096 Einträgen gesprochen.
+Im "Intel Optimization Manual Vol 1" finden sich weitere verschiedene Werte:
+
+| TLB | Größe | 
+| ---- | ---- | 
+| First Level Data | 64 Einträge | 
+| Instruction | 128 Einträge | 
+| Second Level | 2048 Einträge | 
 
 
+## Übliche Architekturen für TLBs
+TLBs finden sich heutzutage in jeder oft eingesetzten Architektur, egal ob in RISC Systemen (z.B. MIPS oder Alpha) oder CISC Systemen (z.B. x86).
 
+## Hauptspeicher- und TLB-Latenzen in modernen Prozessoren
 
+Für die Hauptspeicher-Latenzen haben wir uns auf Werte aus zwei Modernen Prozessoren konzentriert: Den Apple M1, der Anwendung in Macs und iPads findet und den DDR5 RAM, der sowohl in den neuesten Intel (Gen. 12+) als auch den aktuellsten AMD Prozessoren, der Ryzen 9 Serie, eingesetzt wird. Des weiteren haben wir den Vergleich zu einem SDRAM aus 1993 gezogen.
+Dafür ergeben sich folgende Werte:
+
+| Prozessor / RAM | Latenz |
+| ---- | ---- |
+| Apple M1 | 96ns | 
+| DDR5 | ~14ns | 
+| SDRAM | ~24ns |
+
+Für die TLB-Latenzen finden sich ganz unterschiedliche Werte, je nach Anwendung und Größe des TLBs. Hier einige Beispiele:
+
+| TLB | Latenz |
+| ---- | ---- |
+| DTLB (Intel) | 4 cycles |
+| L2 Cache (Publikation) | 21 cycles |
+| TLB (Ableitung aus Buch) | 11 - 30 cycles |
+
+---
+
+Quellen und Literaturreferenzen finden sich in [docs/sources.md](./docs/sources.md)
