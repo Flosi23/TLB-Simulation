@@ -42,3 +42,7 @@ cmake_install.cmake
 *.sublime-workspace
 *.vcd
 venv/
+
+# Ignore SystemC build
+lib/systemc-build/
+lib/systemc-install/
