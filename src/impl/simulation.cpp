@@ -47,7 +47,7 @@ struct Result run_simulation(
         unsigned v2bBlockOffset,
         unsigned memoryLatency,
         size_t numRequests,
-        struct Request requests[],
+        struct Request *requests,
         const char *tracefile
 ) {
     return run_simulation_extended(cycles, tlbSize, tlbLatency, blockSize, v2bBlockOffset, memoryLatency, numRequests,
@@ -63,7 +63,7 @@ struct Result run_simulation_extended(
         unsigned v2bBlockOffset,
         unsigned memoryLatency,
         size_t numRequests,
-        struct Request requests[],
+        struct Request *requests,
         const char *tracefile,
         const char *logfile,
         bool debug

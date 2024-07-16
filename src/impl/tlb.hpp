@@ -68,7 +68,7 @@ public:
             std::cerr << "Failed to allocate memory for TLB entries" << std::endl;
             exit(1);
         }
-        for (int i = 0; i < this->config.tlbSize; i++) {
+        for (size_t i = 0; i < this->config.tlbSize; i++) {
             // initialize all entries as invalid
             this->entries[i] = {0, 0, false};
         }
