@@ -40,7 +40,9 @@ systemc:
 		cd $(SYSTEMC_BUILD) && \
 		$(SYSTEMC_SRC)/configure --prefix=$(SYSTEMC_INSTALL) \
 			CXX="$(CXX)" \
-			CXXFLAGS="-O3 -std=c++14" && \
+			CXXFLAGS="-O3 -std=c++14" \
+			--disable-examples \
+			--disable-tests && \
 		$(MAKE) && \
 		$(MAKE) install; \
 	fi
@@ -48,3 +50,4 @@ systemc:
 clean:
 	rm -f $(OBJS) $(TARGET)
 	rm -rf $(SYSTEMC_BUILD) $(SYSTEMC_INSTALL)
+
