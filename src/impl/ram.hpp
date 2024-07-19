@@ -12,13 +12,13 @@ private:
     unsigned memoryLatency;
 
 public:
-    sc_in<uint32_t> data_in;
+    sc_in <uint32_t> data_in;
     sc_in<int> we_in;
-    sc_in<uint32_t> addr_in;
+    sc_in <uint32_t> addr_in;
 
     sc_in<bool> enabled;
 
-    sc_out<uint32_t> data_out;
+    sc_out <uint32_t> data_out;
 
 
     SC_HAS_PROCESS(RAM);
@@ -47,8 +47,12 @@ public:
                 log.DEBUG("Memory Latency: %zu cycles", this->memoryLatency);
                 wait(this->memoryLatency, SC_NS);
             }
-            // send the data back to the CPU
-            // TODO: actually read and write data from memory?
+
+            /**
+             * Usually ram would send the real data read from the memory back to the CPU.
+             * Here we don't care about the return value since we are only interested in the memory latency
+             * -> return some mock data, in this case the address
+             */
             data_out.write(addr);
 
             wait();
