@@ -44,7 +44,7 @@ private:
     size_t hits;
     size_t misses;
 
-    TLBEntry *entries;
+    std::vector <TLBEntry> entries;
 
 public:
     sc_in <uint32_t> addr_in;
@@ -63,23 +63,13 @@ public:
         this->hits = 0;
         this->misses = 0;
 
-        // TODO: use vector, dont allocate!!
-        this->entries = (TLBEntry *) calloc(this->config.tlbSize, sizeof(TLBEntry));
-        if (this->entries == nullptr) {
-            std::cerr << "Failed to allocate memory for TLB entries" << std::endl;
-            exit(1);
-        }
         for (size_t i = 0; i < this->config.tlbSize; i++) {
             // initialize all entries as invalid
-            this->entries[i] = {0, 0, false};
+            this->entries.push_back({0, 0, false});
         }
 
         SC_THREAD(handleVirtualAddress);
         sensitive << enabled;
-    }
-
-    void cleanup() {
-        free(this->entries);
     }
 
     size_t getHits() const {

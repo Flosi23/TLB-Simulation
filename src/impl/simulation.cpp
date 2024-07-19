@@ -105,8 +105,6 @@ struct Result run_simulation_extended(
     res.primitiveGateCount = tlb.getPrimitiveGateCount();
     logSimulationEnd(log, res, tlb.getSizeInBits(), tlb.getCacheLineSizeInBits());
 
-    // free up any memory allocated for the TLB
-    tlb.cleanup();
     return res;
 }
 
