@@ -63,6 +63,7 @@ public:
         this->hits = 0;
         this->misses = 0;
 
+        // TODO: use vector, dont allocate!!
         this->entries = (TLBEntry *) calloc(this->config.tlbSize, sizeof(TLBEntry));
         if (this->entries == nullptr) {
             std::cerr << "Failed to allocate memory for TLB entries" << std::endl;
