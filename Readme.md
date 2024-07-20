@@ -1,11 +1,67 @@
-Was muss hier rein?
 
-1. persönlichen Beitrag jedes Gruppenmitglieds
-2. Ergebnisse der Simulation der Summe über eine linked List zusammenfassen
-3. Ergebnisse der Recherche: übliche Größen, Architekturen für TLBs sowie Hauptspeicher und TLB Latenzen in modernen
-   Prozessoren
+[//]: # (Was muss hier rein?)
+[//]: # (1. persönlichen Beitrag jedes Gruppenmitglieds)
+[//]: # (2. Ergebnisse der Recherche: übliche Größen, Architekturen für TLBs sowie Hauptspeicher und TLB Latenzen in modernen Prozessoren)
+[//]: # (3. Ergebnisse der Simulation der Summe über eine linked List zusammenfassen)
 
-# Simulation der Summe über eine verkettete Liste
+# 1 - Persönliche Beiträge der Gruppenmitglieder
+## Kian Shirazi (go68num)
+- Arg Parser
+- Bugfixes
+- Research zu TLB Größen, Memory Latency, usw.
+
+## James Wagner (ge45cos)
+- Build System / Make System / Lib Management / C Standard Anpassungen
+- CSV Parser
+- Bugfixes
+- Research zu zukünftiger Verwendung von TLBs
+
+## Simon Weckler (ge45wun)
+- C++ Teil
+- Simulation
+- Research zur Summe über eine verkettete Liste + Helper Scripts
+
+---
+
+# 2 - Ergebnisse der Literaturrecherche
+
+## Übliche Größen für TLBs
+Je nach Art und Anwendung kann die Größe eines TLBs stark variieren:
+
+| TLB  | Architektur                                                                                                                  | Größe                | 
+|------|------------------------------------------------------------------------------------------------------------------------------|----------------------| 
+| L1   | Apple M1 [[1]](./docs/sources.md#apple-silicon-cpu-optimization-guide)                                                       | 128 / 160 Einträge   |
+| L1   | Apple M2, M3, A15 Bionic [[1]](./docs/sources.md#apple-silicon-cpu-optimization-guide)                                       | 192 / 256 Einträge   |
+| L2   | AMD Zen (17h) [[2]](./docs/sources.md#amd-zen-reference)                                                                     | 1536 / 1024 Einträge |
+| DTLB | Intel Sandy Bridge Microarchitecture [[3]](./docs/sources.md#intel-64-and-ia-32-architectures-optimization-reference-manual) | 4 / 64 Einträge      |
+| STLB | Intel Sandy Bridge Microarchitecture [[3]](./docs/sources.md#intel-64-and-ia-32-architectures-optimization-reference-manual) | 512 Einträge         | 
+
+
+## Übliche Architekturen für TLBs
+TLBs finden sich heutzutage in jeder oft eingesetzten Architektur, egal ob in RISC Systemen (z.B. MIPS oder Alpha) oder CISC Systemen (z.B. x86).
+
+## Hauptspeicher- und TLB-Latenzen in modernen Prozessoren
+
+Für die Hauptspeicher-Latenzen haben wir uns auf Werte aus zwei Modernen Prozessoren konzentriert: Den Apple M1, der Anwendung in Macs und iPads findet und den DDR5 RAM, der sowohl in den neuesten Intel (Gen. 12+) als auch den aktuellsten AMD Prozessoren, der Ryzen 9 Serie, eingesetzt wird. Des weiteren haben wir den Vergleich zu einem SDRAM aus 1993 gezogen.
+Dafür ergeben sich folgende Werte:
+
+| Prozessor / RAM                                           | Latenz |
+|-----------------------------------------------------------|--------|
+| Apple M1 [[4]](./docs/sources.md#anandtech-apple-m1-test) | 96ns   | 
+| DDR5 [[5]](./docs/sources.md#anandtech-ddr5-ram-test)     | ~14ns  | 
+| SDRAM [[5]](./docs/sources.md#anandtech-ddr5-ram-test)    | ~24ns  |
+
+Für die TLB-Latenzen finden sich ganz unterschiedliche Werte, je nach Anwendung und Größe des TLBs. Hier einige Beispiele:
+
+| TLB                                                                                           | Latenz         |
+|-----------------------------------------------------------------------------------------------|----------------|
+| DTLB [[3]](./docs/sources.md#intel-64-and-ia-32-architectures-optimization-reference-manual)  | 4 cycles       |
+| L2 Cache [[6]](./docs/sources.md#memory-hierarchy-reconfiguration-for-energy-and-performance) | 21 cycles      |
+| TLB [[7]](./docs/sources.md#computer-organization-and-design)                                 | 11 - 30 cycles |
+
+---
+
+# 3 - Simulation der Summe über eine verkettete Liste
 
 **DISCLAIMER**: Eine detaillierte Analyse ist in [docs/sum.md](./docs/sum.md) zu finden.
 
@@ -68,41 +124,4 @@ ist sogar ein Speedup von ca. `40%` möglich. Es ist also definitiv sinnvoll, ei
 
 ---
 
-# Ergebnisse der Literaturrecherche
-
-## Übliche Größen für TLBs
-Je nach Anwendung kann die Größe eines TLBs variieren. In "Computer Organization and Design" von David Patterson wird von Größen von 32 - 4.096 Einträgen gesprochen.
-Im "Intel Optimization Manual Vol 1" finden sich weitere verschiedene Werte:
-
-| TLB | Größe | 
-| ---- | ---- | 
-| First Level Data | 64 Einträge | 
-| Instruction | 128 Einträge | 
-| Second Level | 2048 Einträge | 
-
-
-## Übliche Architekturen für TLBs
-TLBs finden sich heutzutage in jeder oft eingesetzten Architektur, egal ob in RISC Systemen (z.B. MIPS oder Alpha) oder CISC Systemen (z.B. x86).
-
-## Hauptspeicher- und TLB-Latenzen in modernen Prozessoren
-
-Für die Hauptspeicher-Latenzen haben wir uns auf Werte aus zwei Modernen Prozessoren konzentriert: Den Apple M1, der Anwendung in Macs und iPads findet und den DDR5 RAM, der sowohl in den neuesten Intel (Gen. 12+) als auch den aktuellsten AMD Prozessoren, der Ryzen 9 Serie, eingesetzt wird. Des weiteren haben wir den Vergleich zu einem SDRAM aus 1993 gezogen.
-Dafür ergeben sich folgende Werte:
-
-| Prozessor / RAM | Latenz |
-| ---- | ---- |
-| Apple M1 | 96ns | 
-| DDR5 | ~14ns | 
-| SDRAM | ~24ns |
-
-Für die TLB-Latenzen finden sich ganz unterschiedliche Werte, je nach Anwendung und Größe des TLBs. Hier einige Beispiele:
-
-| TLB | Latenz |
-| ---- | ---- |
-| DTLB (Intel) | 4 cycles |
-| L2 Cache (Publikation) | 21 cycles |
-| TLB (Ableitung aus Buch) | 11 - 30 cycles |
-
----
-
-Quellen und Literaturreferenzen finden sich in [docs/sources.md](./docs/sources.md)
+Quellen und Literaturreferenzen finden sich in [./docs/sources.md](./docs/sources.md) oder direkt in den Fußnoten.

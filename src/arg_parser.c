@@ -183,7 +183,7 @@ struct Args parseArgs(int argc, char *argv[]) {
 
 void printHelp() {
     // TODO: Print all options of the program and example usage
-    printf("Usage: tlb-sim [OPTIONS] Input_File [filename...]\n");
+    printf("Usage: tlb-sim [OPTIONS] [INPUT_FILE]\n");
     printf("Options:\n");
     printf("  -h,  --help                Print this help message\n");
     printf("  -c,  --cycles              Number of cycles to simulate\n");
@@ -196,9 +196,7 @@ void printHelp() {
     printf("       --debug               Prints debug information\n");
     printf("       --lf                  Path to log file\n");
     printf("       --rf                  Path to result file\n");
+    printf("  filename                   Path to the input file\n");
 
-    printf("  filename                  Path to the input file\n"); // TODO: Change if necessary
-
-
-    // TODO: Example usage
+    printf("\nExample Usage: tlb-sim -c 1000 --blocksize 4096 --v2b-block-offset 8 --tlb-size 256 --tlb-latency 10 --memory-latency 60 inputfile.csv\n");
 }
