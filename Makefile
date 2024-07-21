@@ -48,7 +48,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
 
 post-build:
-	rm -rf $(OBJS) $(DEPS)
+	rm -f $(OBJS) $(DEPS)
 
 clean:
 	rm -f $(OBJS) $(DEPS) $(TARGET)
