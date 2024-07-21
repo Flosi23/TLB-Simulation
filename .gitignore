@@ -39,3 +39,5 @@ lib/systemc-install/
 
 lib/systemc
 lib/install.log
+# Ignore the binary
+tlbsim
