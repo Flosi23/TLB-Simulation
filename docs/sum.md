@@ -123,7 +123,7 @@ die Anzahl der Speicherzugriffe zu reduzieren und zu vereinfachen.
 
 ## Simulation
 
-Für die Simulation besonders relevant ist die Verteilung der `Knoten` der verketten Liste im Speicher. Diese ist dabei
+Für die Simulation besonders relevant ist die Verteilung der Knoten der verketten Liste im Speicher. Diese ist dabei
 nicht deterministisch, da die Knoten auf dem Heap
 gespeichert werden und die Speicheradressen somit von Betriebssystem, Allokationsstrategie und Zustand des Speichers zum
 Zeitpunkt der Ausführung abhängen.
@@ -153,7 +153,7 @@ Die Simulation wurde mit folgenden Parametern durchgeführt:
 - `Block Size`: 4096 Bytes
 - `V2B Block Offset`: 8
 
-Wir treffen außerdem die Annahme (in den Simulationsdateien auch garantiert) dass der Stack und Heap keine
+Wir treffen außerdem die Annahme (in den Simulationsdateien auch garantiert), dass der Stack und Heap keine
 Speicherblöcke teilen. Der Stack beginnt in den Beispielen immer bei Adresse `0x0` und geht bis `0xfff`, der Heap
 beginnt bei Adresse `0x1000` und
 geht bis `0x1000 + heap_size`.
@@ -174,7 +174,7 @@ Wie man erkennen kann stagnieren sowohl die Anzahl der Zyklen als auch die Anzah
 Größe des Translation Lookaside Buffers bei etwa 500.000 Zyklen und ca. 1100 TLB Misses. Das lässt sich dadurch
 erklären, dass die
 Knoten gleichmäßig auf einem Heap der Größe 256 MiB verteilt sind, also auf `256 MiB / 4096 B = 65536` physische Blöcke.
-Die Wahrscheinlichkeit, dass also eine Node Adresse bereits im TLB ist, ist also sehr gering. Jeder neue Zugriff
+Die Wahrscheinlichkeit, dass eine Node Adresse bereits im TLB ist, ist also sehr gering. Jeder neue Zugriff
 auf `ptr->data` in der Schleife führt also zu einem TLB Miss und erst bei `ptr->next` greift
 wieder der TLB Cache (wenn `ptr->next` im selben
 Block liegt). Aus diesem Grund ist die Anzahl der TLB Misses auch sehr nah an der Anzahl der Knoten in der
@@ -229,7 +229,8 @@ siehe [großer Heap Beispiel](#großer-heap)).
 ### Speedup
 
 Wie schon erwähnt ist der Speedup stark von der räumlichen Lokalität der Speicherzugriffe abhängig. Trotzdem lassen
-sich einige Aussagen treffen. Die Ausführungszeit ohne TLB würde bei `6006 * 2 * 60 = 720720` (jede Requests greift
+sich einige Aussagen treffen. Die Ausführungszeit ohne TLB würde bei `6006 * 2 * 60 = 720720` Zyklen (jede Requests
+greift
 einmal für
 den Page Table Lookup und einmal für den eigentlichen Speicherzugriff auf den RAM zu) liegen.
 
