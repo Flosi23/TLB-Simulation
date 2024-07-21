@@ -115,7 +115,6 @@ struct Args parseArgs(int argc, char *argv[]) {
         }
     }
 
-    // TODO: Let this work with different orders of args!?
     if (optind < argc) {
         args.filename = argv[optind];
     } else {
