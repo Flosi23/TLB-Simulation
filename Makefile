@@ -1,7 +1,6 @@
-# Compiler and flags
 CXX := g++
-CC := gcc
 CXXFLAGS := -Wall -Wextra -std=c++14 -g
+CC := gcc
 CFLAGS := -Wall -Wextra -std=c11 -g
 
 # SystemC paths
@@ -20,33 +19,28 @@ endif
 
 ARCH := $(shell uname -m)
 
-# Set SystemC library path and configuration options based on OS and architecture
+# Set SystemC library path based on OS and architecture
 ifeq ($(DETECTED_OS),Darwin)
     ifeq ($(ARCH),arm64)
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-macosxarm
-        TARGET_ARCH := arm-apple-darwin
     else
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-macosx64
-        TARGET_ARCH := macosx64
     endif
 else ifeq ($(DETECTED_OS),Linux)
-    ifeq ($(ARCH),$(filter $(ARCH),aarch64 arm64))
+    ifeq ($(ARCH),aarch64)
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
-        TARGET_ARCH := linuxaarch64
+    else ifeq ($(ARCH),arm64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
     else ifeq ($(ARCH),x86_64)
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
-        TARGET_ARCH := linux64
     else
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux32
-        TARGET_ARCH := linux32
     endif
 else ifeq ($(DETECTED_OS),Windows)
     ifeq ($(ARCH),x86_64)
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-mingw64
-        TARGET_ARCH := mingw64
     else
         SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-mingw32
-        TARGET_ARCH := mingw32
     endif
 else
     $(error Unsupported operating system: $(DETECTED_OS))
@@ -54,17 +48,14 @@ endif
 
 SYSTEMC_LIB_FILE := $(SYSTEMC_LIB)/libsystemc.a
 
-# Compiler and linker flags
 INCLUDES := -Isrc -I$(SYSTEMC_INC)
-LDFLAGS := -L$(SYSTEMC_LIB) -Wl,-rpath,$(SYSTEMC_LIB) -lsystemc
+LDFLAGS := -L$(SYSTEMC_LIB) -Wl,-rpath,$(SYSTEMC_LIB) $(SYSTEMC_LIB_FILE)
 CPPFLAGS := -DSC_INCLUDE_FX -DSC_CPLUSPLUS=201402L
 
-# Source files
 SRCS := src/csv_parser.c src/arg_parser.c src/main.c
 CPPSRCS := src/impl/simulation.cpp
 OBJS := $(SRCS:.c=.o) $(CPPSRCS:.cpp=.o)
 
-# Target executable
 TARGET := main
 
 .PHONY: all clean systemc
@@ -86,10 +77,13 @@ systemc:
 		mkdir -p $(SYSTEMC_BUILD) && \
 		cd $(SYSTEMC_BUILD) && \
 		echo "Configuring SystemC..." && \
-		if $(SYSTEMC_SRC)/configure \
+		if timeout 300 $(SYSTEMC_SRC)/configure \
 			--prefix=$(SYSTEMC_INSTALL) \
-			--target=$(TARGET_ARCH) \
+			CXX="$(CXX)" \
+			CXXFLAGS="-O3 -std=c++14" \
 			--enable-debug \
+			--enable-verbose-config \
+			--disable-scv \
 			2>&1 | tee configure.log; then \
 			echo "Compiling SystemC..." && \
 			if $(MAKE) VERBOSE=1 -j$$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 2) 2>&1 | tee make.log; then \
@@ -105,7 +99,7 @@ systemc:
 				exit 1; \
 			fi; \
 		else \
-			echo "SystemC configuration failed. Check configure.log for details."; \
+			echo "SystemC configuration failed or timed out. Check configure.log for details."; \
 			exit 1; \
 		fi; \
 	else \
