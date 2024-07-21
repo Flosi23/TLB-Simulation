@@ -26,7 +26,15 @@ TARGET := main
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: systemc $(TARGET)
+
+systemc:
+	@if [ ! -d "$(SYSTEMC_HOME)" ]; then \
+		echo "SystemC not found. Building SystemC..."; \
+		$(MAKE) -C lib; \
+	else \
+		echo "SystemC found."; \
+	fi
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
