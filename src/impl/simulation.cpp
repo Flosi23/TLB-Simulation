@@ -88,7 +88,7 @@ struct Result run_simulation_extended(
 
     if (tracefile != nullptr && strlen(tracefile) > 0) {
         sc_trace_file *file = sc_create_vcd_trace_file(tracefile);
-        requestWorker.trace(file);
+        requestWorker.trace_signals(file);
     }
 
     // start the simulation
