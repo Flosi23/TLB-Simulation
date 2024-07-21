@@ -35,3 +35,5 @@ venv/
 # Ignore SystemC build
 lib/systemc-build/
 lib/systemc-install/
+
+lib/systemc
