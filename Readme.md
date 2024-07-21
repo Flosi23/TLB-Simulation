@@ -36,8 +36,6 @@ vom Prozessor abhängig. Generell kann man bei ihr von ca. ~60 - 100 ns ausgehen
 | DTLB (L1) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 4 Zyklen       |
 | TLB (L2) [[1]](./docs/sources.md#1-computer-organization-and-design)                                | 10 - 30 Zyklen |
 
----
-
 ## 2 - Simulation der Summe über eine verkettete Liste
 
 Siehe [docs/sum.md](./docs/sum.md) für eine detaillierte Version des Beispiels.
