@@ -65,6 +65,7 @@ systemc:
 		echo "Building SystemC..." && \
 		mkdir -p $(SYSTEMC_BUILD) && \
 		cd $(SYSTEMC_BUILD) && \
+		sed -i 's/aclocal-1\.14/aclocal/g' $(SYSTEMC_SRC)/configure && \
 		$(SYSTEMC_SRC)/configure \
 			--prefix=$(SYSTEMC_INSTALL) \
 			CXX="$(CXX)" \
