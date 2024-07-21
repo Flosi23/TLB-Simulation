@@ -37,3 +37,4 @@ lib/systemc-build/
 lib/systemc-install/
 
 lib/systemc
+lib/install.log
