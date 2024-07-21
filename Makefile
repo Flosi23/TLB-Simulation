@@ -21,11 +21,27 @@ ARCH := $(shell uname -m)
 
 # Set SystemC library path based on OS and architecture
 ifeq ($(DETECTED_OS),Darwin)
-    SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-macosx$(shell if [ "$(ARCH)" = "x86_64" ]; then echo 64; fi)
+    ifeq ($(ARCH),arm64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-macosarm64
+    else
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-macosx64
+    endif
 else ifeq ($(DETECTED_OS),Linux)
-    SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux$(shell if [ "$(ARCH)" = "x86_64" ]; then echo 64; fi)
+    ifeq ($(ARCH),aarch64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
+    else ifeq ($(ARCH),arm64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
+    else ifeq ($(ARCH),x86_64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux64
+    else
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-linux32
+    endif
 else ifeq ($(DETECTED_OS),Windows)
-    SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-mingw$(shell if [ "$(ARCH)" = "x86_64" ]; then echo 64; fi)
+    ifeq ($(ARCH),x86_64)
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-mingw64
+    else
+        SYSTEMC_LIB := $(SYSTEMC_HOME)/lib-mingw32
+    endif
 else
     $(error Unsupported operating system: $(DETECTED_OS))
 endif
@@ -89,7 +105,6 @@ systemc:
 	else \
 		echo "SystemC is already built."; \
 	fi
-
 
 clean:
 	rm -f $(OBJS) $(TARGET)
