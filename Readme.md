@@ -26,16 +26,16 @@ CISC Systemen (z.B. x86).
 Die Latenz ist hier die Latenz des RAM selber und nicht die Systemlatenz. Die Systemlatenz ist stark
 vom Prozessor abhängig. Generell kann man bei ihr von ca. ~60 - 100 ns ausgehen.
 
-| RAM                                                                                                       | Latenz  |
-|-----------------------------------------------------------------------------------------------------------|---------|
-| DDR5-4800-CL36 [[7]](./docs/sources.md#7-ddr5-latenzen)[[6]](./docs/sources.md#6-anandtech-ddr5-ram-test) | ~14ns   | 
-| DDR5-6800-CL36 [[7]](./docs/sources.md#7-ddr5-latenzen)                                                   | 10.56ns | 
-| DDR4-3200-CL14 [[7]](./docs/sources.md#7-ddr5-latenzen)                                                   | 8.75ns  | 
+| RAM                                                                                                       | Latenz   |
+|-----------------------------------------------------------------------------------------------------------|----------|
+| DDR5-4800-CL36 [[7]](./docs/sources.md#7-ddr5-latenzen)[[6]](./docs/sources.md#6-anandtech-ddr5-ram-test) | ~14 ns   | 
+| DDR5-6800-CL36 [[7]](./docs/sources.md#7-ddr5-latenzen)                                                   | 10.56 ns | 
+| DDR4-3200-CL14 [[7]](./docs/sources.md#7-ddr5-latenzen)                                                   | 8.75 ns  | 
 
 | TLB                                                                                                 | Latenz         |
 |-----------------------------------------------------------------------------------------------------|----------------|
-| DTLB (L1) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 4 cycles       |
-| TLB (L2) [[1]](./docs/sources.md#1-computer-organization-and-design)                                | 10 - 30 cycles |
+| DTLB (L1) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 4 Zyklen       |
+| TLB (L2) [[1]](./docs/sources.md#1-computer-organization-and-design)                                | 10 - 30 Zyklen |
 
 ---
 
@@ -79,7 +79,8 @@ ein neuer Conflict Miss auf (siehe [großer heap](#großer-heap)).
 
 ### Speedup
 
-Die Ausführungszeit ohne TLB würde bei `6006 * 2 * 60 = 720720` Zyklen liegen. Selbst bei schlechter räumlicher
+Die Ausführungszeit ohne TLB würde bei `numReq * 2 * memLatency = 6006 * 2 * 60 = 720720` Zyklen liegen. Selbst bei
+schlechter räumlicher
 Lokalität (wie im [großen Heap Beispiel](#großer-heap)) kann durch das Cachen des
 Stackpointers
 ein Speedup von ca. `1.46` facher Geschwindigkeit erreicht werden. Bei guter räumlicher Lokalität (wie
