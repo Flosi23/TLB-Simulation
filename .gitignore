@@ -21,14 +21,6 @@
 # Ignore all .DS_Store files (macOS directory settings)
 .DS_Store
 
-# Ignore CMake files
-CMakeCache.txt
-CMakeFiles/
-cmake-build-debug/
-CMakeScripts/
-CMakeTmp/
-cmake_install.cmake
-
 # Ignore Visual Studio Code files
 .vscode/
 
