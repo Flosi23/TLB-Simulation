@@ -47,9 +47,9 @@ Dafür ergeben sich folgende Werte:
 
 | Prozessor / RAM                                           | Latenz |
 |-----------------------------------------------------------|--------|
-| Apple M1 [[4]](./docs/sources.md#anandtech-apple-m1-test) | 96ns   | 
-| DDR5 [[5]](./docs/sources.md#anandtech-ddr5-ram-test)     | ~14ns  | 
-| SDRAM [[5]](./docs/sources.md#anandtech-ddr5-ram-test)    | ~24ns  |
+| Apple M1 [[4]](./docs/sources.md#anandtech-apple-m1-test) | 96ns   |  307 cycles
+| DDR5 [[5]](./docs/sources.md#anandtech-ddr5-ram-test)     | ~14ns  |  67  cycles
+| SDRAM [[5]](./docs/sources.md#anandtech-ddr5-ram-test)    | ~24ns  |  3   cycles
 
 Für die TLB-Latenzen finden sich ganz unterschiedliche Werte, je nach Anwendung und Größe des TLBs. Hier einige Beispiele:
 

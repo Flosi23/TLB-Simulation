@@ -5,7 +5,7 @@
 #include "types.h"
 
 /**
- * TODO: Create a method that parses all the commandline arguments.
+ * Goal: Create a method that parses all the commandline arguments.
  */
 
 // Function prototypes
@@ -54,8 +54,8 @@ struct Args parseArgs(int argc, char *argv[]) {
             .blocksize = 4096, // 4KiB is the default page size used by some operating systems (e.g. linux x84_64), but it differs (e.g. 16KiB on M1 ARM macOS)
             .v2b_block_offset = 8,
             .tlb_size = 256,
-            .tlb_latency = 10, // TODO: NOT FINAL
-            .memory_latency = 60, // TODO: NOT FINAL
+            .tlb_latency = 10,
+            .memory_latency = 60,
             .result_file = NULL, // No result file
             .trace_file = NULL, // No tracefile
             .log_file = NULL, // No log file
@@ -125,7 +125,6 @@ struct Args parseArgs(int argc, char *argv[]) {
     }
 
     // Check if optional values make sense
-    // TODO: I will use printHelp() for all the values. Should we print a more detailed tailored message?
 
     if (args.cycles <= 0) {
         fprintf(stderr, "Error: Number of cycles must be greater than 0\n");
@@ -182,7 +181,7 @@ struct Args parseArgs(int argc, char *argv[]) {
 
 
 void printHelp() {
-    // TODO: Print all options of the program and example usage
+    // Print all options of the program and example usage
     printf("Usage: tlb-sim [OPTIONS] [INPUT_FILE]\n");
     printf("Options:\n");
     printf("  -h,  --help                Print this help message\n");
