@@ -10,6 +10,7 @@
 # Ignore all .o and .a files (object and archive files from the build process)
 *.o
 *.a
+*.d
 
 # Ignore all .so files (shared object files from the build process)
 *.so
