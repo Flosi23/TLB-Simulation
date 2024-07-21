@@ -5028,6 +5028,10 @@ OPT_CXXFLAGS="-O3"
 EXPLICIT_LPTHREAD="-lpthread"
 LDFLAG_RPATH="-Wl,-rpath="
 
+
+echo "TARGET CPU" ${target_cpu}
+echo "TARGET" ${target}
+
 case $target in #(
   *-apple-*) :
     TARGET_ARCH=macosx ;; #(
@@ -5055,6 +5059,8 @@ fi ;; #(
   *) :
      ;;
 esac
+
+echo "TARGET CPU" ${target_cpu}
 
 case ${TARGET_ARCH} in #(
   linux|bsd|mingw|cygwin) :
@@ -5106,6 +5112,10 @@ esac
              TARGET_ARCH="${TARGET_ARCH}ppc64"
           CPU_ARCH="ppc64"
           QT_ARCH="pthreads" ;; #(
+  arm) :
+        TARGET_ARCH="${TARGET_ARCH}arm"
+        CPU_ARCH="arm64"
+        QT_ARCH="pthreads" ;;
   powerpc) :
              TARGET_ARCH="${TARGET_ARCH}ppc"
           CPU_ARCH="ppc"
