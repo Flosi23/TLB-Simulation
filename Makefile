@@ -26,18 +26,16 @@ HDRS := $(wildcard src/*.h src/**/*.h src/*.hpp src/**/*.hpp)
 
 DEPS := $(OBJS:.o=.d)
 
-TARGET := main
+TARGET := tlbsim
 
 .PHONY: all clean systemc
 
-all: systemc $(TARGET)
+all: systemc $(TARGET) post-build
 
 systemc:
 	@if [ ! -d "$(SYSTEMC_HOME)" ]; then \
 		echo "SystemC not found. Building SystemC..."; \
 		$(MAKE) -C lib; \
-	else \
-		echo "SystemC found."; \
 	fi
 
 $(TARGET): $(OBJS)
@@ -48,6 +46,9 @@ $(TARGET): $(OBJS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+
+post-build:
+	rm -rf $(OBJS) $(DEPS)
 
 clean:
 	rm -f $(OBJS) $(DEPS) $(TARGET)

@@ -28,7 +28,7 @@ struct Args parseArgs(int argc, char *argv[]) {
             {"help",             no_argument,       0,           'h'}, // Help
             {"debug",            no_argument,       &debug_flag, 1},
             {"rf",               required_argument, 0,           'r'}, // Will write the result (or all if multiple simulations are run) in a csv file
-            {0, 0,                                  0,           0} // Terminator
+            {0,                  0,                 0,           0} // Terminator
     };
 
     int option_index = 0;
@@ -197,5 +197,5 @@ void printHelp() {
     printf("       --rf                  Path to result file\n");
     printf("  filename                   Path to the input file\n");
 
-    printf("\nExample Usage: tlb-sim -c 1000 --blocksize 4096 --v2b-block-offset 8 --tlb-size 256 --tlb-latency 10 --memory-latency 60 inputfile.csv\n");
+    printf("\nExample Usage: ./tlbsim -c 1000 --blocksize 4096 --v2b-block-offset 8 --tlb-size 256 --tlb-latency 10 --memory-latency 60 inputfile.csv\n");
 }
