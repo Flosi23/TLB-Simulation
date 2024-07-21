@@ -96,7 +96,7 @@ ist sogar ein Speedup von `1.71` möglich.
 
 ### James Wagner
 
-- Build System, C(++) Standard Anpassungen
+- Build System, C, C++ Standard Anpassungen
 - CSVParser
 - Bugfixes
 
