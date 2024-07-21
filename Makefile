@@ -8,7 +8,11 @@ SYSTEMC_HOME := $(PWD)/lib/systemc
 SYSTEMC_INC := $(SYSTEMC_HOME)/include
 SYSTEMC_LIB := $(SYSTEMC_HOME)/lib
 
-SYSTEMC_LIB_FILE := $(SYSTEMC_LIB)/libsystemc.so
+ifeq ($(shell uname),Darwin)
+    SYSTEMC_LIB_FILE := $(SYSTEMC_LIB)/libsystemc.dylib
+else
+    SYSTEMC_LIB_FILE := $(SYSTEMC_LIB)/libsystemc.so
+endif
 
 INCLUDES := -Isrc -I$(SYSTEMC_INC)
 LDFLAGS := -L$(SYSTEMC_LIB) -Wl,-rpath,$(SYSTEMC_LIB) $(SYSTEMC_LIB_FILE)
