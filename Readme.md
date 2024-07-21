@@ -3,8 +3,6 @@
 > Im Rahmen des Praktikums wurde der Einfluss von Translation-Lookaside-Buffers(TLBs) mithilfe  
 > einer selbstgeschriebenen Simulation untersucht.
 
----
-
 ## 1 - Ergebnisse der Literaturrecherche
 
 ### Übliche Größen für TLBs
