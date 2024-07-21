@@ -9,19 +9,18 @@
 
 Je nach Cache-Level kann die Größe eines TLBs stark variieren (siehe [TLB.md](./docs/TLB.md#übliche-größe)):
 
-| TLB  | Architektur                                                                                                    | Größe                | 
-|------|----------------------------------------------------------------------------------------------------------------|----------------------| 
-| L1   | Apple M2, M3, A15 Bionic [[3]](./docs/sources.md#3-apple-silicon-cpu-optimization-guide)                       | 192 / 256 Einträge   |
-| L2   | AMD Zen (17h) [[5]](./docs/sources.md#5-amd-zen-reference)                                                     | 1536 / 1024 Einträge |
-| DTLB | Intel (Sandy Bridge) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 4 / 64 Einträge      |
-| STLB | Intel (Sandy Bridge) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 512 Einträge         | 
+| TLB         | Architektur                                                                                                    | Größe                | 
+|-------------|----------------------------------------------------------------------------------------------------------------|----------------------| 
+| L1          | Apple M2, M3, A15 Bionic [[3]](./docs/sources.md#3-apple-silicon-cpu-optimization-guide)                       | 192 / 256 Einträge   |
+| L2          | AMD Zen (17h) [[5]](./docs/sources.md#5-amd-zen-reference)                                                     | 1536 / 1024 Einträge |
+| DTLB / STLB | Intel (Sandy Bridge) [[4]](./docs/sources.md#4-intel-64-and-ia-32-architectures-optimization-reference-manual) | 64 / 512 Einträge    |
 
 ### Übliche Architekturen für TLBs
 
 TLBs finden sich heutzutage in jeder oft eingesetzten Architektur, egal ob in RISC Systemen (z.B. MIPS oder Alpha) oder
 CISC Systemen (z.B. x86).
 
-### Hauptspeicher- und TLB-Latenzen in modernen Prozessoren
+### Hauptspeicher- und TLB-Latenzen
 
 Die Latenz ist hier die Latenz des RAM selber und nicht die Systemlatenz. Die Systemlatenz ist stark
 vom Prozessor abhängig. Generell kann man bei ihr von ca. ~60 - 100 ns ausgehen.
@@ -83,25 +82,25 @@ Die Ausführungszeit ohne TLB würde bei `numReq * 2 * memLatency = 6006 * 2 * 6
 schlechter räumlicher
 Lokalität (wie im [großen Heap Beispiel](#großer-heap)) kann durch das Cachen des
 Stackpointers
-ein Speedup von ca. `1.46` facher Geschwindigkeit erreicht werden. Bei guter räumlicher Lokalität (wie
+ein Speedup von `1.46` facher Geschwindigkeit erreicht werden. Bei guter räumlicher Lokalität (wie
 im [kleiner Heap Beispiel](#kleiner-heap))
-ist sogar ein Speedup von ca. `1.71` möglich.
+ist sogar ein Speedup von `1.71` möglich.
 
 ## 3 - persönliche Beiträge der Gruppenmitglieder
 
-### Kian Shirazi (go68num)
+### Kian Shirazi
 
-- Arg Parser
+- ArgParser
 - Bugfixes
-- Recherche zu TLB Größen, Memory Latency, usw.
+- Recherche zu TLB Größen / Latenz, Memory Latency
 
-### James Wagner (ge45cos)
+### James Wagner
 
-- Build System, C, C++ Standard Anpassungen
-- CSV Parser
+- Build System, C(++) Standard Anpassungen
+- CSVParser
 - Bugfixes
 
-### Simon Weckler (ge45wun)
+### Simon Weckler
 
-- C++ Teil (TLB Simulation)
-- Recherche zur Summe über eine verkettete Liste
+- TLB Simulation (C++)
+- Analyse zur Summe über eine verkettete Liste
